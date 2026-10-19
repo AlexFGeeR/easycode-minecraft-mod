@@ -1,0 +1,69 @@
+:root {
+  --bg: #f3f5fa;
+  --bar: #1f2a44;
+  --bar-text: #f5f7ff;
+  --accent: #4c97ff;
+  --run: #2fb45a;
+  --stop: #e5484d;
+  --panel: #16192b;
+  --panel-text: #e6e9f5;
+  --muted: #8b93b3;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; overflow: hidden; background: var(--bg);
+  font-family: "Segoe UI", system-ui, -apple-system, "Helvetica Neue", Arial, sans-serif; }
+.bar { height: 56px; display: flex; align-items: center; gap: 8px; padding: 0 12px;
+  background: var(--bar); color: var(--bar-text); }
+.brand { font-weight: 700; font-size: 18px; margin-right: 8px; letter-spacing: .3px; }
+.logo { color: var(--accent); }
+.spacer { flex: 1; }
+.btn { font: inherit; font-size: 15px; font-weight: 600; border: 0; border-radius: 10px;
+  padding: 8px 14px; cursor: pointer; background: #34405f; color: var(--bar-text); }
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: translateY(1px); }
+.btn.run { background: var(--run); color: #fff; font-size: 16px; padding: 9px 18px; }
+.btn.stop { background: var(--stop); color: #fff; }
+.btn.ghost { background: transparent; border: 1px solid #44507a; }
+.btn.ghost.on { background: #34405f; }
+.speed { display: flex; align-items: center; gap: 6px; font-size: 14px; color: #c8cee6; margin-left: 6px; }
+.speed select { font: inherit; font-size: 14px; border-radius: 8px; padding: 5px 6px; border: 0; }
+
+main { position: absolute; top: 56px; left: 0; right: 0; bottom: 0; display: flex; }
+#workspace { flex: 1; position: relative; }
+#pyPanel { width: 36%; min-width: 280px; background: var(--panel); color: var(--panel-text);
+  display: flex; flex-direction: column; border-left: 3px solid #2b3150; }
+body.noPy #pyPanel { display: none; }
+.pyHead { padding: 10px 14px; font-weight: 600; font-size: 14px; border-bottom: 1px solid #2b3150; }
+.pyHead .hint { color: var(--muted); font-weight: 400; margin-left: 6px; }
+#python { margin: 0; padding: 14px; overflow: auto; flex: 1; font-size: 15px; line-height: 1.5;
+  font-family: Consolas, "Cascadia Mono", "DejaVu Sans Mono", Menlo, monospace; white-space: pre; tab-size: 4; }
+#python .kw { color: #ff8fd1; font-weight: 600; }
+#python .fn { color: #7cc4ff; }
+#python .num { color: #ffcf66; }
+#python .str { color: #9be38a; }
+#python .const { color: #c3a6ff; }
+#python .com { color: #6c7499; font-style: italic; }
+
+.toast { position: fixed; left: 50%; bottom: 24px; transform: translateX(-50%); max-width: 80%;
+  background: #1f2a44; color: #fff; padding: 12px 18px; border-radius: 12px; font-size: 15px;
+  box-shadow: 0 8px 24px rgba(0,0,0,.25); z-index: 50; }
+.toast.err { background: var(--stop); }
+
+.modal { position: fixed; inset: 0; background: rgba(10,14,30,.55); display: flex; align-items: center;
+  justify-content: center; z-index: 40; }
+.modal[hidden], .toast[hidden] { display: none; }
+.card { background: #fff; border-radius: 16px; padding: 20px 22px; width: min(560px, 92vw); max-height: 80vh;
+  display: flex; flex-direction: column; gap: 12px; }
+.card h2 { margin: 0; font-size: 20px; }
+.row { display: flex; gap: 8px; }
+.row.end { justify-content: space-between; }
+.card input { flex: 1; font: inherit; font-size: 15px; padding: 8px 10px; border-radius: 10px; border: 1px solid #c9cfe3; }
+.card .btn.ghost { color: #1f2a44; border-color: #c9cfe3; }
+#projectList { list-style: none; margin: 0; padding: 0; overflow: auto; border: 1px solid #e3e7f2; border-radius: 10px; min-height: 80px; }
+#projectList li { display: flex; align-items: center; gap: 8px; padding: 8px 10px; border-bottom: 1px solid #eef1f8; }
+#projectList li:last-child { border-bottom: 0; }
+#projectList li span { flex: 1; }
+#projectList .empty { color: #8b93b3; justify-content: center; }
+#projectList .btn { padding: 5px 10px; font-size: 14px; }
+.btn.small-del { background: #fde8e8; color: #b42318; }
+.btn.small-open { background: var(--accent); color: #fff; }

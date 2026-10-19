@@ -1,0 +1,86 @@
+plugins {
+    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base { archivesName = project.archives_base_name }
+
+repositories {
+    maven { name = 'MCEF'; url = 'https://mcef-download.cinemamod.com/repositories/releases' }
+    maven { name = 'Modrinth'; url = 'https://api.modrinth.com/maven' }
+}
+
+dependencies {
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    // Официальные имена Mojang — так же, как в исходниках MCEF
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
+
+    modImplementation "com.cinemamod:mcef:${project.mcef_version}"
+    modImplementation "com.cinemamod:mcef-fabric:${project.mcef_version}"
+
+    // Gson уже есть в Minecraft; JUnit — только для тестов интерпретатора
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+test { useJUnitPlatform() }
+
+// ---------- Blockly: скачать из npm и положить в ресурсы мода ----------
+def blocklyOut = layout.buildDirectory.dir('generated/blockly')
+
+tasks.register('downloadBlockly') {
+    def ver = project.blockly_version
+    inputs.property('blocklyVersion', ver)
+    outputs.dir(blocklyOut)
+    doLast {
+        def tgz = layout.buildDirectory.file("blockly-${ver}.tgz").get().asFile
+        if (!tgz.exists()) {
+            tgz.parentFile.mkdirs()
+            logger.lifecycle("Скачиваю Blockly ${ver}…")
+            new URL("https://registry.npmjs.org/blockly/-/blockly-${ver}.tgz").withInputStream { i ->
+                tgz.withOutputStream { it << i }
+            }
+        }
+        def target = blocklyOut.get().dir('assets/blockcode/editor/blockly').asFile
+        project.delete(target)
+        project.copy {
+            from(project.tarTree(project.resources.gzip(tgz))) {
+                include 'package/blockly_compressed.js'
+                include 'package/blocks_compressed.js'
+                include 'package/python_compressed.js'
+                include 'package/msg/ru.js'
+                include 'package/media/**'
+                eachFile { it.path = it.path.replaceFirst('^package/', '') }
+                includeEmptyDirs = false
+            }
+            into target
+        }
+        // Список файлов — чтобы мод мог распаковать их на диск при запуске
+        def names = []
+        target.eachFileRecurse(groovy.io.FileType.FILES) { f ->
+            names << target.toPath().relativize(f.toPath()).toString().replace('\\', '/')
+        }
+        new File(target, 'files.txt').text = names.sort().join('\n')
+    }
+}
+
+processResources {
+    dependsOn 'downloadBlockly'
+    from(blocklyOut)
+    inputs.property 'version', project.version
+    filesMatching('fabric.mod.json') { expand 'version': project.version }
+}
+
+tasks.withType(JavaCompile).configureEach { it.options.release = 17; it.options.encoding = 'UTF-8' }
+
+java {
+    withSourcesJar()
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+}
+

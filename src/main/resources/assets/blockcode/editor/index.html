@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlockCode</title>
+<link rel="stylesheet" href="editor.css">
+</head>
+<body>
+<header class="bar">
+  <div class="brand"><span class="logo">⬛</span> BlockCode</div>
+  <button id="run" class="btn run" title="Запустить программу (F5)">▶ Запустить</button>
+  <button id="stop" class="btn stop" title="Остановить агента">■ Стоп</button>
+  <button id="agentHere" class="btn" title="Агент прилетит к тебе">🤖 Агент ко мне</button>
+  <label class="speed">Скорость
+    <select id="speed">
+      <option value="6">медленно</option>
+      <option value="3" selected>обычно</option>
+      <option value="1">быстро</option>
+      <option value="0">мгновенно</option>
+    </select>
+  </label>
+  <span class="spacer"></span>
+  <button id="example" class="btn ghost">🏠 Пример: домик</button>
+  <button id="projects" class="btn ghost">📁 Проекты</button>
+  <button id="togglePy" class="btn ghost">🐍 Python</button>
+  <button id="close" class="btn ghost" title="Закрыть (Esc)">✕</button>
+</header>
+
+<main>
+  <div id="workspace"></div>
+  <aside id="pyPanel">
+    <div class="pyHead">Тот же код на Python <span class="hint">обновляется сам</span></div>
+    <pre id="python"></pre>
+  </aside>
+</main>
+
+<div id="toast" class="toast" hidden></div>
+
+<div id="projectsDialog" class="modal" hidden>
+  <div class="card">
+    <h2>Проекты</h2>
+    <div class="row">
+      <input id="projectName" maxlength="60" placeholder="Название, например «Мой домик»">
+      <button id="saveProject" class="btn run">Сохранить</button>
+    </div>
+    <ul id="projectList"></ul>
+    <div class="row end">
+      <button id="newProject" class="btn ghost">Новый пустой проект</button>
+      <button id="closeProjects" class="btn">Готово</button>
+    </div>
+  </div>
+</div>
+
+<script src="blockly/blockly_compressed.js"></script>
+<script src="blockly/blocks_compressed.js"></script>
+<script src="blockly/python_compressed.js"></script>
+<script src="blockly/msg/ru.js"></script>
+<script src="blocks.js"></script>
+<script src="examples.js"></script>
+<script src="editor.js"></script>
+</body>
+</html>

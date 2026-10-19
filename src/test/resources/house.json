@@ -1,0 +1,311 @@
+{
+ "v": 1,
+ "main": [
+  {
+   "t": "tp"
+  },
+  {
+   "t": "move",
+   "dir": "FORWARD",
+   "n": {
+    "t": "num",
+    "v": 2
+   }
+  },
+  {
+   "t": "move",
+   "dir": "UP",
+   "n": {
+    "t": "num",
+    "v": 1
+   }
+  },
+  {
+   "t": "for",
+   "var": "этаж",
+   "from": {
+    "t": "num",
+    "v": 1
+   },
+   "to": {
+    "t": "num",
+    "v": 4
+   },
+   "by": {
+    "t": "num",
+    "v": 1
+   },
+   "body": [
+    {
+     "t": "call",
+     "name": "слой"
+    },
+    {
+     "t": "move",
+     "dir": "UP",
+     "n": {
+      "t": "num",
+      "v": 1
+     }
+    }
+   ]
+  },
+  {
+   "t": "call",
+   "name": "крыша"
+  },
+  {
+   "t": "say",
+   "v": {
+    "t": "text",
+    "v": "Домик готов!"
+   }
+  }
+ ],
+ "procs": {
+  "слой": [
+   {
+    "t": "for",
+    "var": "сторона",
+    "from": {
+     "t": "num",
+     "v": 1
+    },
+    "to": {
+     "t": "num",
+     "v": 4
+    },
+    "by": {
+     "t": "num",
+     "v": 1
+    },
+    "body": [
+     {
+      "t": "for",
+      "var": "шаг",
+      "from": {
+       "t": "num",
+       "v": 1
+      },
+      "to": {
+       "t": "num",
+       "v": 4
+      },
+      "by": {
+       "t": "num",
+       "v": 1
+      },
+      "body": [
+       {
+        "t": "if",
+        "branches": [
+         {
+          "cond": {
+           "t": "not",
+           "a": {
+            "t": "logic",
+            "op": "AND",
+            "a": {
+             "t": "logic",
+             "op": "AND",
+             "a": {
+              "t": "cmp",
+              "op": "EQ",
+              "a": {
+               "t": "var",
+               "name": "сторона"
+              },
+              "b": {
+               "t": "num",
+               "v": 1
+              }
+             },
+             "b": {
+              "t": "cmp",
+              "op": "EQ",
+              "a": {
+               "t": "var",
+               "name": "шаг"
+              },
+              "b": {
+               "t": "num",
+               "v": 3
+              }
+             }
+            },
+            "b": {
+             "t": "cmp",
+             "op": "LTE",
+             "a": {
+              "t": "var",
+              "name": "этаж"
+             },
+             "b": {
+              "t": "num",
+              "v": 2
+             }
+            }
+           }
+          },
+          "body": [
+           {
+            "t": "place",
+            "dir": "DOWN",
+            "block": "oak_planks"
+           }
+          ]
+         }
+        ],
+        "else": null
+       },
+       {
+        "t": "move",
+        "dir": "FORWARD",
+        "n": {
+         "t": "num",
+         "v": 1
+        }
+       }
+      ]
+     },
+     {
+      "t": "turn",
+      "dir": "LEFT"
+     }
+    ]
+   }
+  ],
+  "крыша": [
+   {
+    "t": "for",
+    "var": "ряд",
+    "from": {
+     "t": "num",
+     "v": 1
+    },
+    "to": {
+     "t": "num",
+     "v": 5
+    },
+    "by": {
+     "t": "num",
+     "v": 1
+    },
+    "body": [
+     {
+      "t": "repeat",
+      "n": {
+       "t": "num",
+       "v": 4
+      },
+      "body": [
+       {
+        "t": "place",
+        "dir": "DOWN",
+        "block": "spruce_planks"
+       },
+       {
+        "t": "move",
+        "dir": "FORWARD",
+        "n": {
+         "t": "num",
+         "v": 1
+        }
+       }
+      ]
+     },
+     {
+      "t": "place",
+      "dir": "DOWN",
+      "block": "spruce_planks"
+     },
+     {
+      "t": "if",
+      "branches": [
+       {
+        "cond": {
+         "t": "cmp",
+         "op": "LT",
+         "a": {
+          "t": "var",
+          "name": "ряд"
+         },
+         "b": {
+          "t": "num",
+          "v": 5
+         }
+        },
+        "body": [
+         {
+          "t": "if",
+          "branches": [
+           {
+            "cond": {
+             "t": "cmp",
+             "op": "EQ",
+             "a": {
+              "t": "arith",
+              "op": "MOD",
+              "a": {
+               "t": "var",
+               "name": "ряд"
+              },
+              "b": {
+               "t": "num",
+               "v": 2
+              }
+             },
+             "b": {
+              "t": "num",
+              "v": 1
+             }
+            },
+            "body": [
+             {
+              "t": "turn",
+              "dir": "LEFT"
+             },
+             {
+              "t": "move",
+              "dir": "FORWARD",
+              "n": {
+               "t": "num",
+               "v": 1
+              }
+             },
+             {
+              "t": "turn",
+              "dir": "LEFT"
+             }
+            ]
+           }
+          ],
+          "else": [
+           {
+            "t": "turn",
+            "dir": "RIGHT"
+           },
+           {
+            "t": "move",
+            "dir": "FORWARD",
+            "n": {
+             "t": "num",
+             "v": 1
+            }
+           },
+           {
+            "t": "turn",
+            "dir": "RIGHT"
+           }
+          ]
+         }
+        ]
+       }
+      ],
+      "else": null
+     }
+    ]
+   }
+  ]
+ }
+}
